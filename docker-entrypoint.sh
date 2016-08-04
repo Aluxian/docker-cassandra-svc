@@ -27,10 +27,11 @@ if [ "$1" = 'cassandra' ]; then
 	fi
 	: ${CASSANDRA_BROADCAST_RPC_ADDRESS:=$CASSANDRA_BROADCAST_ADDRESS}
 
+	: ${CASSANDRA_PORT_7000_TCP_ADDR:="cassandra-1"}
 	if [ -n "${CASSANDRA_NAME:+1}" ]; then
-		: ${CASSANDRA_SEEDS:="cassandra"}
+		: ${CASSANDRA_SEEDS:="$CASSANDRA_PORT_7000_TCP_ADDR"}
 	fi
-	: ${CASSANDRA_SEEDS:="$CASSANDRA_BROADCAST_ADDRESS"}
+	: ${CASSANDRA_SEEDS:="$CASSANDRA_PORT_7000_TCP_ADDR"}
 
 	sed -ri 's/(- seeds:).*/\1 "'"$CASSANDRA_SEEDS"'"/' "$CASSANDRA_CONFIG/cassandra.yaml"
 
@@ -58,12 +59,6 @@ if [ "$1" = 'cassandra' ]; then
 			sed -ri 's/^('"$rackdc"'=).*/\1 '"$val"'/' "$CASSANDRA_CONFIG/cassandra-rackdc.properties"
 		fi
 	done
-fi
-
-if cat /etc/hosts | grep "$CASSANDRA_SEEDS" > /dev/null; then
-  echo "seed node"
-else
-  echo "$CASSANDRA_PORT_7000_TCP_ADDR cassandra-1" >> /etc/hosts
 fi
 
 exec "$@"
