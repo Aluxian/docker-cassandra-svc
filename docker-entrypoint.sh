@@ -17,7 +17,7 @@ if [ "$1" = 'cassandra' ]; then
 
 	: ${CASSANDRA_LISTEN_ADDRESS='auto'}
 	if [ "$CASSANDRA_LISTEN_ADDRESS" = 'auto' ]; then
-		CASSANDRA_LISTEN_ADDRESS="$DOCKERCLOUD_CONTAINER_FQDN"
+		CASSANDRA_LISTEN_ADDRESS="$(cat /etc/hosts | grep '10.*cassandra-' | awk '{print $1}')"
 	fi
 
 	: ${CASSANDRA_BROADCAST_ADDRESS="$CASSANDRA_LISTEN_ADDRESS"}
@@ -27,10 +27,10 @@ if [ "$1" = 'cassandra' ]; then
 	fi
 	: ${CASSANDRA_BROADCAST_RPC_ADDRESS:=$CASSANDRA_BROADCAST_ADDRESS}
 
+	: ${CASSANDRA_SEEDS:="${DOCKERCLOUD_CONTAINER_FQDN/$DOCKERCLOUD_CONTAINER_HOSTNAME/"cassandra-1"}"}
 	if [ -n "${CASSANDRA_NAME:+1}" ]; then
-		: ${CASSANDRA_SEEDS:="$CASSANDRA_PORT_7000_TCP_ADDR"}
+		: ${CASSANDRA_SEEDS:="cassandra"}
 	fi
-	: ${CASSANDRA_SEEDS:="$CASSANDRA_PORT_7000_TCP_ADDR"}
 	: ${CASSANDRA_SEEDS:="cassandra"}
 
 	sed -ri 's/(- seeds:).*/\1 "'"$CASSANDRA_SEEDS"'"/' "$CASSANDRA_CONFIG/cassandra.yaml"
