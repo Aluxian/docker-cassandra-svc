@@ -27,7 +27,6 @@ if [ "$1" = 'cassandra' ]; then
 	fi
 	: ${CASSANDRA_BROADCAST_RPC_ADDRESS:=$CASSANDRA_BROADCAST_ADDRESS}
 
-	: ${CASSANDRA_PORT_7000_TCP_ADDR:="cassandra-1"}
 	if [ -n "${CASSANDRA_NAME:+1}" ]; then
 		: ${CASSANDRA_SEEDS:="$CASSANDRA_PORT_7000_TCP_ADDR"}
 	fi
