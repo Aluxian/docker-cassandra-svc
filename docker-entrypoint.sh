@@ -31,6 +31,7 @@ if [ "$1" = 'cassandra' ]; then
 		: ${CASSANDRA_SEEDS:="$CASSANDRA_PORT_7000_TCP_ADDR"}
 	fi
 	: ${CASSANDRA_SEEDS:="$CASSANDRA_PORT_7000_TCP_ADDR"}
+	: ${CASSANDRA_SEEDS:="cassandra"}
 
 	sed -ri 's/(- seeds:).*/\1 "'"$CASSANDRA_SEEDS"'"/' "$CASSANDRA_CONFIG/cassandra.yaml"
 
