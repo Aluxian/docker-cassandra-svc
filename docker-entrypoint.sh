@@ -17,7 +17,7 @@ if [ "$1" = 'cassandra' ]; then
 
 	: ${CASSANDRA_LISTEN_ADDRESS='auto'}
 	if [ "$CASSANDRA_LISTEN_ADDRESS" = 'auto' ]; then
-		CASSANDRA_LISTEN_ADDRESS="$(cat /etc/hosts | grep '10.*cassandra-' | awk '{print $1}')"
+		CASSANDRA_LISTEN_ADDRESS="0.0.0.0"
 	fi
 
 	: ${CASSANDRA_BROADCAST_ADDRESS="$CASSANDRA_LISTEN_ADDRESS"}
