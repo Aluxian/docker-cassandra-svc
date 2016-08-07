@@ -14,25 +14,10 @@ fi
 
 if [ "$1" = 'cassandra' ]; then
 	: ${CASSANDRA_RPC_ADDRESS='0.0.0.0'}
-	: ${DOCKER_NET_IP:="$(cat /etc/hosts | grep '10.*cassandra-' | awk '{print $1}')"}
-
-	: ${CASSANDRA_LISTEN_ADDRESS='auto'}
-	if [ "$CASSANDRA_LISTEN_ADDRESS" = 'auto' ]; then
-		CASSANDRA_LISTEN_ADDRESS="$DOCKER_NET_IP"
-	fi
-
+	: ${CASSANDRA_LISTEN_ADDRESS="$(cat /etc/hosts | grep '10.*cassandra-' | awk '{print $1}')"}
 	: ${CASSANDRA_BROADCAST_ADDRESS="$CASSANDRA_LISTEN_ADDRESS"}
-
-	if [ "$CASSANDRA_BROADCAST_ADDRESS" = 'auto' ]; then
-		CASSANDRA_BROADCAST_ADDRESS="$DOCKER_NET_IP"
-	fi
-	: ${CASSANDRA_BROADCAST_RPC_ADDRESS:=$CASSANDRA_BROADCAST_ADDRESS}
-
-	if [ -n "${CASSANDRA_NAME:+1}" ]; then
-		: ${CASSANDRA_SEEDS:="$CASSANDRA_PORT_7000_TCP_ADDR"}
-	fi
-	: ${CASSANDRA_SEEDS:="$CASSANDRA_PORT_7000_TCP_ADDR"}
-	: ${CASSANDRA_SEEDS:="cassandra"}
+	: ${CASSANDRA_BROADCAST_RPC_ADDRESS=$CASSANDRA_BROADCAST_ADDRESS}
+	: ${CASSANDRA_SEEDS="$CASSANDRA_PORT_7000_TCP_ADDR"}
 
 	sed -ri 's/(- seeds:).*/\1 "'"$CASSANDRA_SEEDS"'"/' "$CASSANDRA_CONFIG/cassandra.yaml"
 
