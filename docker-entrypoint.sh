@@ -34,6 +34,11 @@ if [ "$1" = 'cassandra' ]; then
 
 	sed -ri 's/(- seeds:).*/\1 "'"$CASSANDRA_SEEDS"'"/' "$CASSANDRA_CONFIG/cassandra.yaml"
 
+	: ${CASSANDRA_WRITE_REQUEST_TIMEOUT_IN_MS:=10000}
+	: ${CASSANDRA_CONCURRENT_READS:=32}
+	: ${CASSANDRA_CONCURRENT_WRITES:=32}
+	: ${CASSANDRA_CONCURRENT_COUNTER_WRITES:=32}
+
 	for yaml in \
 		broadcast_address \
 		broadcast_rpc_address \
@@ -43,6 +48,10 @@ if [ "$1" = 'cassandra' ]; then
 		num_tokens \
 		rpc_address \
 		start_rpc \
+		write_request_timeout_in_ms \
+		concurrent_reads \
+		concurrent_writes \
+		concurrent_counter_writes \
 	; do
 		var="CASSANDRA_${yaml^^}"
 		val="${!var}"
