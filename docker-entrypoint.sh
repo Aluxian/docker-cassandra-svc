@@ -34,10 +34,15 @@ if [ "$1" = 'cassandra' ]; then
 
 	sed -ri 's/(- seeds:).*/\1 "'"$CASSANDRA_SEEDS"'"/' "$CASSANDRA_CONFIG/cassandra.yaml"
 
+	: ${CASSANDRA_READ_REQUEST_TIMEOUT_IN_MS:=10000}
 	: ${CASSANDRA_WRITE_REQUEST_TIMEOUT_IN_MS:=10000}
 	: ${CASSANDRA_CONCURRENT_READS:=32}
 	: ${CASSANDRA_CONCURRENT_WRITES:=32}
 	: ${CASSANDRA_CONCURRENT_COUNTER_WRITES:=32}
+	: ${CASSANDRA_CONCURRENT_COMPACTORS:=2}
+	: ${CASSANDRA_MEMTABLE_FLUSH_WRITERS:=2}
+	: ${CASSANDRA_MEMTABLE_HEAP_SPACE_IN_MB:=2048}
+	: ${CASSANDRA_MEMTABLE_OFFHEAP_SPACE_IN_MB:=2048}
 
 	for yaml in \
 		broadcast_address \
@@ -48,10 +53,15 @@ if [ "$1" = 'cassandra' ]; then
 		num_tokens \
 		rpc_address \
 		start_rpc \
+		read_request_timeout_in_ms \
 		write_request_timeout_in_ms \
 		concurrent_reads \
 		concurrent_writes \
 		concurrent_counter_writes \
+		concurrent_compactors \
+		memtable_flush_writers \
+		memtable_heap_space_in_mb \
+		memtable_offheap_space_in_mb \
 	; do
 		var="CASSANDRA_${yaml^^}"
 		val="${!var}"
